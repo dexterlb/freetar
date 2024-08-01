@@ -19,29 +19,35 @@
       in
       {
         packages = {
-          myapp = mkPoetryApplication { 
-            projectDir = self; 
+          freetar = mkPoetryApplication {
+            projectDir = self;
             overrides = defaultPoetryOverrides.extend
-                (self: super: {
-                    lesscpy = super.lesscpy.overridePythonAttrs
-                    (
-                        old: {
-                        buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-                        }
-                    );
-                    flask-minify = super.flask-minify.overridePythonAttrs
-                    (
-                        old: {
-                        buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-                        }
-                    );
-            });
+              (self: super: {
+                lesscpy = super.lesscpy.overridePythonAttrs
+                  (old: {
+                    buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
+                  });
+                flask-minify = super.flask-minify.overridePythonAttrs
+                  (old: {
+                    buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
+                  });
+                itsdangerous = super.itsdangerous.overridePythonAttrs (
+                  old: {
+                    buildInputs = (old.buildInputs or [ ]) ++ [ super.flit-core ];
+                  }
+                );
+                jinja2 = super.jinja2.overridePythonAttrs (
+                  old: {
+                    buildInputs = (old.buildInputs or [ ]) ++ [ super.flit-core ];
+                  }
+                );
+              });
           };
-          default = self.packages.${system}.myapp;
+          default = self.packages.${system}.freetar;
         };
 
         devShells.default = pkgs.mkShell {
-          inputsFrom = [ self.packages.${system}.myapp ];
+          inputsFrom = [ self.packages.${system}.freetar ];
           packages = [ pkgs.poetry ];
         };
       });
