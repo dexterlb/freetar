@@ -1,28 +1,38 @@
-[tool.poetry]
+[project]
+authors = [
+    {name = "kmille", email = "github@androidloves.me"},
+]
+requires-python = "<4.0,>=3.9"
+dependencies = [
+    "requests[socks]<3.0.0,>=2.32.3",
+    "beautifulsoup4<5.0.0,>=4.12.0",
+    "flask<4.0.0,>=3.0.30",
+    "waitress<4.0.0,>=3.0.2",
+    "flask-minify<1.0,>=0.49",
+]
 name = "freetar"
 version = "0.12.0"
 description = ""
-authors = ["kmille <github@androidloves.me>"]
 readme = "README.md"
-repository = "https://github.com/kmille/freetar"
+
+[project.urls]
 homepage = "https://github.com/kmille/freetar"
+repository = "https://github.com/kmille/freetar"
 
+[project.scripts]
+freetar = "freetar.backend:main"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-requests = {extras = ["socks"], version = "^2.32.3"}
-beautifulsoup4 = "^4.12.0"
-flask = "^3.0.30"
-waitress = "^3.0.2"
-flask-minify = "^0.49"
-
-
-[tool.poetry.group.dev.dependencies]
-pdbpp = "^0.10.3"
+[dependency-groups]
+dev = [
+    "pdbpp<1.0.0,>=0.10.3",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry.scripts]
-freetar = 'freetar.backend:main'
+[tool.hatch.build.targets.sdist]
+packages = ["freetar"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["freetar"]
