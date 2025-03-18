@@ -26,3 +26,13 @@ freetar = "freetar.backend:main"
 dev = [
     "pdbpp<1.0.0,>=0.10.3",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+packages = ["freetar"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["freetar"]
