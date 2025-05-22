@@ -1,16 +1,19 @@
 import waitress
 import os
 from flask import Flask, render_template, request
+from flask_caching import Cache
 from flask_minify import Minify
 
-from freetar.ug import ug_search, ug_tab
+from freetar.ug import Search, ug_tab
 from freetar.utils import get_version, FreetarError
 
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache',
+                      "CACHE_DEFAULT_TIMEOUT": 0,
+                      "CACHE_THRESHOLD": 10000})
 
 app = Flask(__name__)
+cache.init_app(app)
 Minify(app=app, html=True, js=True, cssless=True)
-
-TOR_ENABLED = "FREETAR_ENABLE_TOR" in os.environ
 
 
 @app.context_processor
@@ -26,19 +29,25 @@ def index():
 
 
 @app.route("/search")
+@cache.cached(query_string=True)
 def search():
     search_term = request.args.get("search_term")
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        return render_template('error.html',
+                               error="Invalid page requested. Not a number.")
+    search_results = None
     if search_term:
-        search_results = ug_search(search_term)
-    else:
-        search_results = []
+        search_results = Search(search_term, page)
     return render_template("index.html",
                            search_term=search_term,
                            title=f"Freetar - Search: {search_term}",
-                           search_results=search_results,)
+                           search_results=search_results)
 
 
 @app.route("/tab/<artist>/<song>")
+@cache.cached()
 def show_tab(artist: str, song: str):
     tab = ug_tab(f"{artist}/{song}")
     return render_template("tab.html",
@@ -47,6 +56,7 @@ def show_tab(artist: str, song: str):
 
 
 @app.route("/tab/<tabid>")
+@cache.cached()
 def show_tab2(tabid: int):
     tab = ug_tab(tabid)
     return render_template("tab.html",
@@ -63,8 +73,7 @@ def show_favs():
 
 @app.route("/about")
 def show_about():
-    return render_template('about.html',
-                           tor_enabled=TOR_ENABLED)
+    return render_template('about.html')
 
 
 @app.errorhandler(403)
