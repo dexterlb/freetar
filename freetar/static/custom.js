@@ -126,6 +126,7 @@ function initialise_transpose() {
         const text = $(this).text()
         $(this).attr('data-original', text)
     })
+    transposedSteps.hide()
 
     function transpose() {
         $('.tab').find('.chord-root, .chord-bass').each(function () {
@@ -133,6 +134,7 @@ function initialise_transpose() {
             const transposedSteps = $('#transposed_steps')
             if (transpose_value === 0) {
                 $(this).text(originalText)
+                transposedSteps.text("0")
                 transposedSteps.hide()
             } else {
                 const new_text = transpose_note(originalText.trim(), transpose_value)

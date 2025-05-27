@@ -9,9 +9,9 @@
           <span title="add/remove song to/from favs" class="favorite m-2 d-print-none" data-artist="{{tab.artist_name}}" data-song="{{tab.song_name}}" data-type="{{tab._type}}" data-rating="{{tab.rating}}" data-url="{{ request.path }}">★</span>
           <span title="download" role="button" id="download" class="m-2 d-print-none">📥</span><br/>
           <div id="download-options" style="display: none;">
-            <a class="d-print-none d-none d-md-inline" href="{{ tab.download_url() }}?format=txt">Download (Plain text)</a><br>
-            <a class="d-print-none d-none d-md-inline" href="{{ tab.download_url() }}?format=ug_txt">Download (UG format)</a><br>
-            <a class="d-print-none d-none d-md-inline" href="{{ tab.download_url() }}?format=chordpro">Download (ChordPro)</a>
+            <a class="d-print-none d-none d-md-inline" href="#" onclick="location.href='{{ tab.download_url() }}?format=txt&transpose='+document.getElementById('transposed_steps').textContent">Download (Plain text)</a><br>
+            <a class="d-print-none d-none d-md-inline" href="#" onclick="location.href='{{ tab.download_url() }}?format=ug_txt&transpose='+document.getElementById('transposed_steps').textContent">Download (UG format)</a><br>
+            <a class="d-print-none d-none d-md-inline" href="#" onclick="location.href='{{ tab.download_url() }}?format=chordpro&transpose='+document.getElementById('transposed_steps').textContent">Download (ChordPro)</a>
           </div>
       </h5>
   </div>
@@ -57,7 +57,7 @@
           <span class="">Transpose </span>
           <span role="button" id="transpose_down" title="transpose down" class="m-2">↓</span>
           <span role="button" id="transpose_up" title="transpose up" class="m-2">↑</span>
-          <span role="button" id="transposed_steps" class="m-2"></span>
+          <span role="button" id="transposed_steps" class="m-2">0</span>
       </div>
   </div>
 
