@@ -58,15 +58,17 @@ def show_tab2(tabid: int):
 @app.route("/download/<artist>/<song>")
 def download_tab(artist: str, song: str):
     tab = ug_tab(f"{artist}/{song}")
-    format = request.args.get('format')
-    return tab_to_dl_file(tab, format)
+    format = request.args.get("format")
+    transpose = request.args.get("transpose", 0)
+    return tab_to_dl_file(tab, format, transpose)
 
 
 @app.route("/download/<tabid>")
 def download_tab2(tabid: int):
     tab = ug_tab(tabid)
-    format = request.args.get('format')
-    return tab_to_dl_file(tab, format)
+    format = request.args.get("format")
+    transpose = request.args.get("transpose", 0)
+    return tab_to_dl_file(tab, format, transpose)
 
 
 @app.route("/favs")
@@ -76,7 +78,7 @@ def show_favs():
                            favs=True)
 
 
-def tab_to_dl_file(tab: SongDetail, format: str):
+def tab_to_dl_file(tab: SongDetail, format: str, transpose: int):
     if format == 'ug_txt':
         ext = 'ug.txt'
         content = tab.raw_tab
@@ -85,7 +87,7 @@ def tab_to_dl_file(tab: SongDetail, format: str):
         content = tab.plain_text()
     elif format == 'chordpro':
         ext = 'cho'
-        content = song_to_chordpro(tab)
+        content = song_to_chordpro(tab, transpose=transpose)
     else:
         return f'no such format: {format}', 400
 
